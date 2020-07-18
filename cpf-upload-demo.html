@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cloud Pay Full Upload Demo</title>
+
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/angular.js/1.6.8/angular.min.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/angular-file-upload-master/dist/angular-file-upload.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <link href="bower_components/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="cpf-upload.css?v=4" rel="stylesheet" type="text/css"/>
+    <script src="cpf-upload.js?v=3"></script>
+</head>
+<body>
+<div ng-app="myApp" ng-controller="CPFUploadDemoCtrl">
+    <cpf-upload config="{{config}}" call-back="callBack(result, errorCode, message, response)">
+</div>
+<script>
+    var app = angular.module('myApp', ["module.cloudpayfull.upload"]);
+    app.config(["$CPFUploadProvider", function ($CPFUploadProvider) {
+        // $CPFUploadProvider.setConfig({menuAreaArrayFlag: true});
+    }]);
+    app.controller('CPFUploadDemoCtrl', function($scope) {
+        $scope.callBack = function (result, errorCode, message, response) {
+            if (!result) {
+                console.log("失败-{0}:{1}", errorCode, message);
+            } else {
+                console.log("成功:", response);
+            }
+        }
+        $scope.config = {
+            token: "XXXXX",
+            tokenKey: "WEB-TOKEN",
+            extensions: ["PNG", "BMP"],
+            uploadUrl: "/test/upload"
+        }
+    });
+
+</script>
+</body>
+</html>

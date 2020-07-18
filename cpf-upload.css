@@ -1,0 +1,8 @@
+.my-drop-zone { border: dotted 3px lightgray; height: 100px; text-align: center; line-height: 10px;}
+.another-file-over-class { border: dotted 3px green; }
+
+.cpf-upload{
+    font-size: 16px;
+}
+.cpf-upload input{display: none}
+.cpf-upload .progressbar {line-height: 28px; font-size: 18px;}
