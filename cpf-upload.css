@@ -4,5 +4,5 @@
 .cpf-upload{
     font-size: 16px;
 }
-/*.cpf-upload input{display: none}*/
+.cpf-upload input{display: none}
 .cpf-upload .progressbar {line-height: 28px; font-size: 18px;}

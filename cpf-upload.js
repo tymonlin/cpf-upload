@@ -57,7 +57,10 @@
                     tokenKey: $CPFUpload.tokenKey,
                     maxCount: $CPFUpload.maxCount
                 };
-                $scope._config = config = angular.extend(config, JSON.parse($scope.config));
+                console.log(typeof $scope.config);
+                var outConfig = {};
+                if ($scope.config) outConfig = JSON.parse($scope.config);
+                $scope._config = config = angular.extend(config, outConfig);
 
                 var uploader = $scope.uploader = new FileUploader({});//创建一个文件上传对象
                 if (config.token && config.tokenKey) {
@@ -110,6 +113,7 @@
                     if (status != 200 && status != 0) {
                         $scope.callBack({result: false, errorCode: "09", message: response.message});
                     } else {
+                        console.log(response);
                         $scope.callBack({result: true, response: response});
                     }
                 };
@@ -119,7 +123,7 @@
     upload.provider("$CPFUpload", function () {
         this.tokenKey = "WEB-TOKEN";
         this.maxCount = 1,
-        this.officeExtensions = ["xls", "xlsx", "doc", "docx", "ppt", "pptx"];
+            this.officeExtensions = ["xls", "xlsx", "doc", "docx", "ppt", "pptx"];
         this.zipExtensions = ["zip", "rar", "7z"];
         this.imgExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         this.pdfExtensions = ["pdf"];

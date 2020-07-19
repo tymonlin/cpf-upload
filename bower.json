@@ -1,6 +1,6 @@
 {
   "name": "cpf-upload",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "内部使用",
   "main": "gulpfile.js",
   "authors": [
