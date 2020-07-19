@@ -14,14 +14,15 @@
             restrict: "EA",
             scope: {
                 config: "@",
-                callBack: "&"
+                callBack: "&",
+                uploadUrl: "="
             },
             replace: true,
             template:
                 "<div class='container-fluid cpf-upload'>"+
-                "    <input type='file' οnchange='angular.element(this).scope().fileChange(this);' nv-file-select='' uploader='uploader'>" +
-                "    <input type='text' ng-change='checkFileName()' ng-model='fileName'>" +
-                "    <div class='row' nv-file-drop='' uploader='uploader' onclick='$(this).parent().children(\"input\").eq(0).click();' ng-if='uploader.queue.length < _config.maxCount && uploader.isHTML5'>" +
+                "    <input type='file' id='uploadFile'  nv-file-select='' uploader='uploader'>" +
+                "    <div class='row' nv-file-drop='' uploader='uploader' onclick='$(this).parent().children(\"input\").eq(0).click();' " +
+                "        ng-if='uploader.queue.length < _config.maxCount && uploader.isHTML5'>" +
                 "        <div nv-file-over='' uploader='uploader' over-class='another-file-over-class' class='well my-drop-zone'>" +
                 "            拖拽或点击上传<hr/>（请选择<span ng-repeat='ext in _config.extensions'>.{{ext}},</span> 格式文件上传）" +
                 "        </div>" +
@@ -54,24 +55,19 @@
                 var config = {
                     extensions: $CPFUpload.fileExtensions,
                     tokenKey: $CPFUpload.tokenKey,
-                    uploadUrl: "/",
                     maxCount: $CPFUpload.maxCount
                 };
-                config = angular.extend(config, JSON.parse($scope.config));
-                $scope.fileChange = function(target) {
-                    var name = target.value;
-                    $('#fileName').val(name).trigger("change");
-                }
-                $scope._config = config;
-                console.log($scope.config);
+                $scope._config = config = angular.extend(config, JSON.parse($scope.config));
+
                 var uploader = $scope.uploader = new FileUploader({});//创建一个文件上传对象
                 if (config.token && config.tokenKey) {
                     uploader.headers[config.tokenKey] = config.token;
                 } else {
                     console.warn("Please set the token code!");
                 }
-                if (config.uploadUrl == undefined || config.uploadUrl == '/') console.warn("未配置 uploadUrl 字段");
-                uploader.url = config.uploadUrl;
+                $scope.$watch("uploadUrl", function () {
+                    uploader.url = $scope.uploadUrl;
+                });
                 uploader.filters.push({
                     name: 'extensionFilter',
                     fn: function(item, options) {
@@ -122,7 +118,7 @@
     });
     upload.provider("$CPFUpload", function () {
         this.tokenKey = "WEB-TOKEN";
-        this.maxCount = 3,
+        this.maxCount = 1,
         this.officeExtensions = ["xls", "xlsx", "doc", "docx", "ppt", "pptx"];
         this.zipExtensions = ["zip", "rar", "7z"];
         this.imgExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
@@ -155,9 +151,11 @@
             var ret = dataSize, unit = "byte";
             while (ret > 1000) {
                 ret = ret / 1000;
-                if (unit == "byte") unit = "Kb";
-                if (unit == "Kb") unit = "Mb";
-                if (unit == "Mb") {
+                if (unit == "byte") {
+                    unit = "Kb";
+                } else if (unit == "Kb") {
+                    unit = "Mb";
+                } else if (unit == "Mb") {
                     unit = "Gb";
                     break;
                 }
